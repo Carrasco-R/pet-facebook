@@ -69,12 +69,9 @@ app.post("/login", async (req, res) => {
   const { username, pass } = req.body;
   const isAuthenticated = await authenticate(username, pass);
   if (isAuthenticated) {
-    console.log("redirecting");
-    res.redirect(302, "http://localhost:3000/portal");
+    res.sendStatus(200);
   } else {
-    res.send({
-      body: { message: "LOGIN FAILURE" },
-    });
+    res.sendStatus(401);
   }
 });
 

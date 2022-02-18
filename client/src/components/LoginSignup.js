@@ -1,11 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginSignup() {
   let login = {
     username: "",
     pass: "",
   };
-
+  let navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     // console.log(login.user, login.pass);
@@ -16,6 +17,12 @@ export default function LoginSignup() {
       },
       body: JSON.stringify(login),
     });
+    if (res.ok) {
+      console.log("LOGGED IN");
+      navigate("/portal");
+    } else {
+      console.log("Unauthenticated");
+    }
   };
 
   const handleField = (e) => {
