@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import userContext from "./userContext";
 
 export default function LoginSignup() {
+  const { setUser } = useContext(userContext);
   let login = {
     username: "",
     pass: "",
@@ -19,6 +21,8 @@ export default function LoginSignup() {
     });
     if (res.ok) {
       console.log("LOGGED IN");
+      // const username = React.createContext(login.username);
+      setUser(login.username);
       navigate("/portal");
     } else {
       console.log("Unauthenticated");

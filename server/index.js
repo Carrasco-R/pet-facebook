@@ -50,6 +50,31 @@ const authenticate = async (username, pass) => {
   }
 };
 
+const getPosts = async (username) => {
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      `SELECT * from posts
+      where username IN 
+      (SELECT distinct unnest(array[
+              username1
+              , username2
+          ]) as users
+      from friendships
+      WHERE username1 ='${username}'
+      OR username2 = '${username}')`
+    );
+    console.log("-----------SQL RES---------------");
+    console.log(res.rows);
+    return res.rows;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // Make sure to release the client before any error handling,
+    client.release();
+  }
+};
+
 let db = [
   {
     name: "buster",
@@ -73,6 +98,14 @@ app.post("/login", async (req, res) => {
   } else {
     res.sendStatus(401);
   }
+});
+
+app.get("/posts/:username", async (req, res) => {
+  const { username } = req.params;
+  response = await getPosts(username);
+  res.send({
+    body: response,
+  });
 });
 
 // app.use("/cats", cats);
