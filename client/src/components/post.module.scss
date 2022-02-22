@@ -4,4 +4,27 @@
   background-color: white;
   box-shadow: 5px 5px 2px rgb(230, 230, 230);
   margin-bottom: 2%;
+  max-height: 500vh;
+}
+.image {
+  max-height: 40vh;
+}
+
+.profileContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2vh;
+}
+
+.profilePic {
+  max-width: 4vw;
+  height: 4vw;
+  border-radius: 2vw;
+  border-color: purple;
+  border-style: solid;
+}
+
+.profileText {
+  font-size: 34px;
+  padding-left: 1vw;
 }

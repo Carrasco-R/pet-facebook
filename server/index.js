@@ -52,15 +52,29 @@ const getPosts = async (username) => {
   const client = await pool.connect();
   try {
     const res = await client.query(
-      `SELECT * from posts
-      where username IN 
-      (SELECT distinct unnest(array[
-              username1
-              , username2
-          ]) as users
-      from friendships
-      WHERE username1 ='${username}'
-      OR username2 = '${username}')`
+      `SELECT p.*, u.profile_url, u.firstName
+      FROM friendships f
+      INNER JOIN posts p on p.username = f.username1 OR p.username = f.username2
+      LEFT JOIN users u ON u.username = p.username
+      WHERE f.username1 = '${username}' OR f.username2 = '${username}'`
+    );
+    console.log("-----------SQL RES---------------");
+    console.log(res.rows);
+    return res.rows;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // Make sure to release the client before any error handling,
+    client.release();
+  }
+};
+
+const getUserInfo = async (username) => {
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      `SELECT * from users
+      where username = '${username}'`
     );
     console.log("-----------SQL RES---------------");
     console.log(res.rows);
@@ -162,6 +176,15 @@ app.post("/signup", async (req, res) => {
 app.get("/posts/:username", async (req, res) => {
   const { username } = req.params;
   response = await getPosts(username);
+  res.send({
+    body: response,
+  });
+});
+
+app.get("/profile/:username", async (req, res) => {
+  const { username } = req.params;
+  console.log(username);
+  response = await getUserInfo(username);
   res.send({
     body: response,
   });

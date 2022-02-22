@@ -1,24 +1,52 @@
-import Icon from "./Icon";
 import styles from "./post.module.scss";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { Avatar } from "@mui/material";
+
 export default function Post({ post }) {
-  const { username, body, media_url } = post;
-  // console.log(username);
+  const { body, media_url, profile_url, firstname } = post;
   return (
-    <div className={styles.container}>
-      <div>
-        <span>{username}</span>
-      </div>
-      <p>{body}</p>
-      <iframe
-        title="Media"
-        src={media_url}
-        alt="Ur blind"
-        width="100%"
-        height="100%"
-      ></iframe>
-      <div>
-        <Icon code="favorite" color="red" />
-      </div>
-    </div>
+    <Card sx={{ marginY: 2.5 }}>
+      <CardContent>
+        <div className={styles.profileContainer}>
+          <CardMedia
+            component="img"
+            alt="Get better connection nerd!"
+            className={styles.profilePic}
+            image={profile_url}
+          />
+          <div className={styles.profileText}>{firstname}</div>
+        </div>
+        <CardMedia
+          component="img"
+          alt="Get better connection nerd!"
+          height="400"
+          maxWidth="10"
+          image={media_url}
+        />
+        <Typography variant="h6" color="black" sx={{ paddingTop: 2.5 }}>
+          {body}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small">
+          <Avatar sx={{ bgcolor: "red" }}>
+            <FavoriteIcon />
+          </Avatar>
+        </Button>
+        <Button size="small">
+          <Avatar sx={{ bgcolor: "RGB(24, 120, 244)" }}>
+            <AddCommentIcon />
+          </Avatar>
+        </Button>
+      </CardActions>
+    </Card>
   );
 }

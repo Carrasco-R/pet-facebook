@@ -3,6 +3,12 @@ import Icon from "./Icon";
 import styles from "./portal.module.css";
 import Post from "./Post.js";
 import userContext from "./userContext";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Button from "@mui/material/Button";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 export default function Portal() {
   const { user } = useContext(userContext);
@@ -12,7 +18,7 @@ export default function Portal() {
     if (res.ok) {
       console.log("POSTS FOUND");
       let json = await res.json();
-      setPosts(json.body);
+      setPosts(json.body.reverse());
     } else {
       console.log("POST FETCH FAILED");
     }
@@ -57,21 +63,27 @@ export default function Portal() {
         </header>
         <main className={styles.main}>
           <div className={styles.wall}>
-            <form onSubmit={submitPost}>
-              <label>
-                Body
-                <input name="body" />
-              </label>
-              <label>
-                Mood
-                <input name="mood" />
-              </label>
-              <label>
-                URL
-                <input name="media_url" />
-              </label>
-              <button type="submit">Post</button>
-            </form>
+            <Card>
+              <CardContent>
+                <form onSubmit={submitPost}>
+                  <TextareaAutosize
+                    aria-label="minimum height"
+                    minRows={3}
+                    placeholder="What's on your mind?"
+                    style={{ width: "100%" }}
+                  />
+                  <label>
+                    Mood
+                    <input name="mood" />
+                  </label>
+                  <label>
+                    URL
+                    <input name="media_url" />
+                  </label>
+                  <Button type="submit">Post</Button>
+                </form>
+              </CardContent>
+            </Card>
 
             {posts.map((post, index) => {
               return <Post key={index} post={post} />;
