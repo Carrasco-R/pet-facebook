@@ -1,15 +1,14 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cats = require("./cat.js");
-
 const { Pool, Client } = require("pg");
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "pets",
-  password: "ricardo",
-  port: 5432,
+  connectionString: process.env.POSTGRES,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 // pool.query("SELECT * FROM users", (err, res) => {
 //   console.log(res.rows);
