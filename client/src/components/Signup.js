@@ -20,6 +20,7 @@ export default function SignUp() {
   const [age, setAge] = useState(0);
   const { setUser } = useContext(userContext);
   let navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -40,19 +41,30 @@ export default function SignUp() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        username: data.get("username"),
+        password: data.get("password"),
+        firstName: data.get("firstName"),
+        lastName: data.get("lastName"),
+        breed: data.get("breed"),
+        color: data.get("color"),
+        gender: data.get("gender"),
+        age: age,
+        birthday: data.get("birthday"),
+        profile_url: data.get("profile_url"),
+      }),
     });
     if (res.ok) {
-      console.log("LOGGED IN");
-      setUser(data.username);
+      console.log("USER CREATED!");
+      setUser(data.get("username"));
       navigate("/portal");
     } else {
-      console.log("Unauthenticated");
+      console.log("SIGNUP FAILED");
     }
   };
   const ageHandler = (newValue) => {
     let date = moment();
-    var birthday = moment(newValue, "YYYY");
+    let birthday = moment(newValue, "YYYY");
     setAge(date.diff(birthday, "years"));
   };
   return (

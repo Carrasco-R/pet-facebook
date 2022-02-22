@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cats = require("./cat.js");
+const moment = require("moment");
 const { Pool, Client } = require("pg");
 
 const pool = new Pool({
@@ -10,10 +11,7 @@ const pool = new Pool({
     rejectUnauthorized: false,
   },
 });
-// pool.query("SELECT * FROM users", (err, res) => {
-//   console.log(res.rows);
-//   pool.end();
-// });
+
 (async () => {
   const client = await pool.connect();
   try {
@@ -75,19 +73,70 @@ const getPosts = async (username) => {
   }
 };
 
-let db = [
-  {
-    name: "buster",
-    breed: "terrier",
-    weight: "122",
-  },
-];
+const signUp = async ({
+  username,
+  password,
+  firstName,
+  lastName,
+  breed,
+  color,
+  gender,
+  age,
+  birthday,
+  profile_url,
+}) => {
+  const client = await pool.connect();
+  try {
+    const res = await client.query(`INSERT INTO users
+    VALUES('${username}', '${password}', '${firstName}', '${lastName}', '${breed}','${color}','${gender}', ${age} ,'${birthday}','${profile_url}');`);
+    console.log(res);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  } finally {
+    // Make sure to release the client before any error handling,
+    client.release();
+  }
+};
+
+const createPost = async ({ username, body, mood, media_url }) => {
+  const client = await pool.connect();
+  try {
+    let dateNow = moment();
+    const res = await client.query(
+      `INSERT INTO posts( username, body, mood, likes, media_url, date_created)
+      VALUES('${username}','${body}', '${mood}', 0, '${media_url}', '${JSON.stringify(
+        dateNow
+      )}');`
+    );
+    console.log(res);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  } finally {
+    // Make sure to release the client before any error handling,
+    client.release();
+  }
+};
 
 const app = express();
 const port = 8000;
 
 app.use(express.json());
 app.use(cors());
+
+app.post("/posts", async (req, res) => {
+  data = req.body;
+  console.log(data);
+  let postCreation = await createPost(data);
+  if (postCreation) {
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(400);
+  }
+});
 
 app.post("/login", async (req, res) => {
   // console.log(req.body);
@@ -100,6 +149,15 @@ app.post("/login", async (req, res) => {
     res.sendStatus(401);
   }
 });
+app.post("/signup", async (req, res) => {
+  data = req.body;
+  const signUpSuccess = await signUp(data);
+  if (signUpSuccess) {
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(400);
+  }
+});
 
 app.get("/posts/:username", async (req, res) => {
   const { username } = req.params;
@@ -107,6 +165,10 @@ app.get("/posts/:username", async (req, res) => {
   res.send({
     body: response,
   });
+});
+
+app.listen(port, () => {
+  console.log("Listening on", port);
 });
 
 // app.use("/cats", cats);
@@ -148,7 +210,3 @@ app.get("/posts/:username", async (req, res) => {
 //     body: db,
 //   });
 // });
-
-app.listen(port, () => {
-  console.log("Listening on", port);
-});

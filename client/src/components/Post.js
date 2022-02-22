@@ -9,7 +9,13 @@ export default function Post({ post }) {
         <span>{username}</span>
       </div>
       <p>{body}</p>
-      <img src={media_url} alt="Ur blind" width="50%" height="50%"></img>
+      <iframe
+        title="Media"
+        src={media_url}
+        alt="Ur blind"
+        width="100%"
+        height="100%"
+      ></iframe>
       <div>
         <Icon code="favorite" color="red" />
       </div>
