@@ -27,11 +27,12 @@ const pool = new Pool({
   }
 })();
 
-const authenticate = async (username, pass) => {
+const authenticate = async (username, password) => {
   const client = await pool.connect();
   try {
+    console.log({ username, password });
     const res = await client.query(
-      `SELECT * from users WHERE username = '${username}' AND pass = '${pass}'`
+      `SELECT * from users WHERE username = '${username}' AND pass = '${password}'`
     );
     console.log("-----------SQL RES---------------");
     if (res.rows[0]) {
@@ -90,8 +91,9 @@ app.use(cors());
 
 app.post("/login", async (req, res) => {
   // console.log(req.body);
-  const { username, pass } = req.body;
-  const isAuthenticated = await authenticate(username, pass);
+  const { username, password } = req.body;
+  console.log({ username, password });
+  const isAuthenticated = await authenticate(username, password);
   if (isAuthenticated) {
     res.sendStatus(200);
   } else {

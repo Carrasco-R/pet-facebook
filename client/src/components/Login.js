@@ -21,15 +21,18 @@ export default function LoginSignup() {
       password: data.get("password"),
     });
     const res = await fetch("http://localhost:8000/login", {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        username: data.get("username"),
+        password: data.get("password"),
+      }),
     });
     if (res.ok) {
       console.log("LOGGED IN");
-      setUser(data.username);
+      setUser(data.get("username"));
       navigate("/portal");
     } else {
       console.log("Unauthenticated");
