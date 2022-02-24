@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar } from "@mui/material";
 
-export default function Post({ post }) {
+export default function Post({ post, mood }) {
   const { body, media_url, profile_url, firstname } = post;
   return (
     <Card sx={{ marginY: 2.5 }}>
@@ -33,6 +33,9 @@ export default function Post({ post }) {
         />
         <Typography variant="h6" color="black" sx={{ paddingTop: 2.5 }}>
           {body}
+        </Typography>
+        <Typography variant="h6" color="black" sx={{ paddingTop: 2.5 }}>
+          {/* {mood} */}
         </Typography>
       </CardContent>
       <CardActions>
