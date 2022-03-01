@@ -4,6 +4,7 @@ import Portal from "./components/Portal";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import userContext from "./components/userContext";
+import { AuthenticatedRoute } from "./components/AuthenticatedRoute";
 
 function App() {
   const [user, setUser] = useState("");

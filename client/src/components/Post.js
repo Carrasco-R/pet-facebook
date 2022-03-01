@@ -35,7 +35,7 @@ export default function Post({ post, mood }) {
           {body}
         </Typography>
         <Typography variant="h6" color="black" sx={{ paddingTop: 2.5 }}>
-          {/* {mood} */}
+          {mood}
         </Typography>
       </CardContent>
       <CardActions>

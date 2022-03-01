@@ -14,6 +14,7 @@ import DateAdapter from "@mui/lab/AdapterMoment";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import moment from "moment";
+import { createAccount } from "./Firebase";
 
 export default function SignUp() {
   const [value, setValue] = useState(null);
@@ -56,6 +57,11 @@ export default function SignUp() {
     });
     if (res.ok) {
       console.log("USER CREATED!");
+      const res = await createAccount(
+        data.get("username"),
+        data.get("password")
+      );
+      console.log({ res });
       setUser(data.get("username"));
       navigate("/portal");
     } else {
